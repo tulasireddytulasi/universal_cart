@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:universal_cart/app/core/utils/color_palette.dart';
 
-
 class CustomBottomNavigationBar extends StatefulWidget {
   final int defaultSelectedIndex;
   final Function(int) onChange;
@@ -55,7 +54,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
         child: Container(
           padding: const EdgeInsets.all(2),
           width: screenWidth >= 600 ? 500 : null,
-          color: Colors.white.withOpacity(0.3127763439360118),
+          color: ColorPalette.antiFlashWhite,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: navBarItemList,
@@ -93,22 +92,18 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
           padding: const EdgeInsets.only(bottom: 5),
           child: Column(
             children: [
-              const SizedBox(
-                height: 10,
-              ),
+              const SizedBox(height: 10),
               CircleAvatar(
                 radius: index == 2 ? 30 : 20,
-                backgroundColor: index == _selectedIndex ? ColorPalette.liteOrange : ColorPalette.liteWhite,
+                backgroundColor: index == 2 ? ColorPalette.liteOrange : ColorPalette.liteWhite,
                 child: Image.asset(
                   imgUrl,
                   width: 22,
                   height: 22,
-                  color: index == _selectedIndex ? ColorPalette.white : ColorPalette.black,
+                  color: ColorPalette.black,
                 ),
               ),
-              const SizedBox(
-                height: 2,
-              ),
+              const SizedBox(height: 2),
               Text(
                 title,
                 style: const TextStyle(
