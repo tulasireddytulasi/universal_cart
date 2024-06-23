@@ -94,13 +94,17 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
             children: [
               const SizedBox(height: 10),
               CircleAvatar(
-                radius: index == 2 ? 30 : 20,
-                backgroundColor: index == 2 ? ColorPalette.liteOrange : ColorPalette.liteWhite,
-                child: Image.asset(
-                  imgUrl,
-                  width: 22,
-                  height: 22,
-                  color: ColorPalette.black,
+                radius: index == _selectedIndex ?  (index == 2 ? 32 : 22) : (index == 2 ? 30 : 20),
+                backgroundColor: ColorPalette.black,
+                child: CircleAvatar(
+                  radius: index == 2 ? 30 : 20,
+                  backgroundColor: index == 2 ? ColorPalette.liteOrange : ColorPalette.liteWhite,
+                  child: Image.asset(
+                    imgUrl,
+                    width: 22,
+                    height: 22,
+                    color: ColorPalette.black,
+                  ),
                 ),
               ),
               const SizedBox(height: 2),

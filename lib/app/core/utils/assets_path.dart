@@ -9,4 +9,7 @@ class Assets {
   static const historyIcon = "assets/icons/history.png";
   static const scannerIcon = "assets/icons/scanner.png";
 
+  static const beepSound = "audio/beep_sound.mp3";
+
+
 }

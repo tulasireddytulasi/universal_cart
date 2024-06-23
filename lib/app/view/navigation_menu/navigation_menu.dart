@@ -41,23 +41,19 @@ class _NavigationMenuState extends State<NavigationMenu> {
 
   @override
   Widget build(BuildContext context) {
-    final double _screenWidth = MediaQuery.of(context).size.width;
+    final double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      body: Stack(
-        children: [
-          ValueListenableBuilder<int>(
-            valueListenable: _currentScreenNo,
-            builder: (context, hasConsent, child) {
-              return IndexedStack(
-                index: _currentScreenNo.value,
-                children: _screens,
-              );
-            },
-          ),
-        ],
+      body: ValueListenableBuilder<int>(
+        valueListenable: _currentScreenNo,
+        builder: (context, hasConsent, child) {
+          return IndexedStack(
+            index: _currentScreenNo.value,
+            children: _screens,
+          );
+        },
       ),
-      bottomNavigationBar: (_screenWidth <= 750)
+      bottomNavigationBar: (screenWidth <= 750)
           ? CustomBottomNavigationBar(
         defaultSelectedIndex: 0,
         onChange: (value) {

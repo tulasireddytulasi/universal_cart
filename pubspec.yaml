@@ -46,6 +46,8 @@ dev_dependencies:
   freezed: ^2.5.2
   build_runner: ^2.4.9
   json_serializable: ^6.8.0
+  haptic_feedback: ^0.5.1+1
+  audioplayers: ^6.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -61,6 +63,7 @@ flutter:
   assets:
     - assets/json/
     - assets/icons/
+    - assets/audio/
 
 
   fonts:
