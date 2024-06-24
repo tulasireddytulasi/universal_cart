@@ -1,9 +1,14 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:universal_cart/app/core/utils/assets_path.dart';
 import 'package:universal_cart/app/view/qr_scanner/widgets/scanner_button_widgets.dart';
 import 'package:universal_cart/app/view/qr_scanner/widgets/scanner_error_widget.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:haptic_feedback/haptic_feedback.dart';
 
 class BarcodeScannerWithController extends StatefulWidget {
   const BarcodeScannerWithController({super.key});
@@ -15,6 +20,7 @@ class BarcodeScannerWithController extends StatefulWidget {
 
 class _BarcodeScannerWithControllerState
     extends State<BarcodeScannerWithController> with WidgetsBindingObserver {
+  late AudioPlayer player = AudioPlayer();
   final MobileScannerController controller = MobileScannerController(
     autoStart: false,
     torchEnabled: false,
@@ -43,9 +49,10 @@ class _BarcodeScannerWithControllerState
   }
 
   void _handleBarcode(BarcodeCapture barcodes) {
-    if (mounted && ( _barcode == barcodes) ) {
+    if (mounted && ( _barcode == null) ) {
       setState(() {
         _barcode = barcodes.barcodes.firstOrNull;
+        beepSound(context: context);
       });
     } else {
       print("_barcode 55: ${barcodes.toString()} ${_barcode?.displayValue ?? "No Data"}");
@@ -56,9 +63,9 @@ class _BarcodeScannerWithControllerState
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-
+    // Create the audio player.
+    player = AudioPlayer();
     _subscription = controller.barcodes.listen(_handleBarcode);
-
     unawaited(controller.start());
   }
 
@@ -128,5 +135,32 @@ class _BarcodeScannerWithControllerState
     _subscription = null;
     super.dispose();
     await controller.dispose();
+  }
+
+  Future<void> beepSound({required BuildContext context}) async {
+    // Check if device is capable of haptic feedback
+    final can = await Haptics.canVibrate();
+
+    // Show snackbar
+    if (!context.mounted) return;
+    final snackBarMessage = can
+        ? 'HapticsType : Soft'
+        : 'This device is not capable of haptic feedback.';
+    can ? HapticFeedback.heavyImpact() : null;
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(snackBarMessage, textAlign: TextAlign.center),
+        duration: const Duration(seconds: 1),
+      ),
+    );
+
+    // Vibrate only if device is capable of haptic feedback
+    if (!can) return;
+
+    await Haptics.vibrate(HapticsType.soft);
+    await player.play(AssetSource(Assets.beepSound));
+    // Set the release mode to keep the source after playback has completed.
+    player.setReleaseMode(ReleaseMode.stop);
   }
 }
