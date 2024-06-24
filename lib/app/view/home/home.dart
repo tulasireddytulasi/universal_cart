@@ -2,10 +2,16 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:universal_cart/app/core/utils/app_styles.dart';
+import 'package:universal_cart/app/core/utils/assets_path.dart';
 import 'package:universal_cart/app/core/utils/color_palette.dart';
 import 'package:universal_cart/app/core/utils/constants.dart';
 import 'package:universal_cart/app/model/cart_model.dart';
+import 'package:universal_cart/app/view/history/history.dart';
 import 'package:universal_cart/app/view/home/widget/cart_item_widget.dart';
+import 'package:universal_cart/app/view/navigation_menu/custom_bottom_navbar.dart';
+import 'package:universal_cart/app/view/profile/profile.dart';
+import 'package:universal_cart/app/view/qr_scanner/barcode_scanner_controller.dart';
+import 'package:universal_cart/app/view/statistics/statistics.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,6 +24,14 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Product> products = [];
   double _totalPrice = 0.0;
   double _totalDiscount = 0.0;
+  final List<String> bottomBarTitles = ["Home", "Statistics", "Scanner", "History", "Profile"];
+  final List<String> iconAssetPaths = [
+    Assets.homeIcon,
+    Assets.statisticsIcon,
+    Assets.scannerIcon,
+    Assets.historyIcon,
+    Assets.userIcon,
+  ];
 
   @override
   void initState() {
@@ -114,6 +128,39 @@ class _HomeScreenState extends State<HomeScreen> {
                 }),
           ),
         ],
+      ),
+      bottomNavigationBar: CustomBottomNavigationBar(
+        defaultSelectedIndex: 0,
+        onChange: (value) {
+          switch (value) {
+            case 1:
+              return Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const StatisticsScreen(),
+                ),
+              );
+            case 2:
+              return Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const BarcodeScannerWithController(), // BarcodeScannerSimple
+                ),
+              );
+            case 3:
+              return Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const HistoryScreen(),
+                ),
+              );
+            case 4:
+              return Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const ProfileScreen(),
+                ),
+              );
+          }
+        },
+        titles: bottomBarTitles,
+        imgUrls: iconAssetPaths,
       ),
     );
   }

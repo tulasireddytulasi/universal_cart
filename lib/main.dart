@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:universal_cart/app/view/navigation_menu/navigation_menu.dart';
+import 'package:universal_cart/app/view/home/home.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const NavigationMenu(),
+      home: const HomeScreen(),
     );
   }
 }

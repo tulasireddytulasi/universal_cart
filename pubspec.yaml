@@ -48,6 +48,13 @@ dev_dependencies:
   json_serializable: ^6.8.0
   haptic_feedback: ^0.5.1+1
   audioplayers: ^6.0.0
+  qr_code_scanner: ^1.0.1
+  permission_handler: ^10.2.0
+  url_launcher: ^6.1.7
+  share_plus: ^6.3.0
+  fluttertoast: ^8.1.2
+  mobile_scanner: ^5.1.1
+  image_picker: ^1.0.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -48,6 +48,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
     }
 
     return Container(
+      height: 92,
       margin: const EdgeInsets.only(bottom: 4, left: 4, right: 4),
       child: buildBlur(
         borderRadius: BorderRadius.circular(10),

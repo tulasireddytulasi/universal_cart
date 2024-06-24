@@ -4,7 +4,7 @@ import 'package:universal_cart/app/view/history/history.dart';
 import 'package:universal_cart/app/view/home/home.dart';
 import 'package:universal_cart/app/view/navigation_menu/custom_bottom_navbar.dart';
 import 'package:universal_cart/app/view/profile/profile.dart';
-import 'package:universal_cart/app/view/qr_scanner/qr_scanner.dart';
+// import 'package:universal_cart/app/view/qr_scanner/qr_scanner.dart';
 import 'package:universal_cart/app/view/statistics/statistics.dart';
 
 class NavigationMenu extends StatefulWidget {
@@ -19,7 +19,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
   final _screens = [
     const HomeScreen(),
     const StatisticsScreen(),
-    const QrScannerScreen(),
+  //  const QrScannerScreen(),
     const HistoryScreen(),
     const ProfileScreen(),
   ];
