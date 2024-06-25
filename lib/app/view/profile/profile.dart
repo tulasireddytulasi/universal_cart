@@ -11,8 +11,18 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: ColorPalette.lightRed,
+    return Scaffold(
+      backgroundColor: ColorPalette.antiFlashWhite,
+      appBar: AppBar(
+        elevation: 1,
+        backgroundColor: ColorPalette.white,
+        leading: const Icon(Icons.arrow_back_ios_rounded, color: ColorPalette.liteOrange, size: 28),
+        title: const Text(
+          "Profile",
+          style: TextStyle(fontSize: 22, color: ColorPalette.black),
+        ),
+        centerTitle: false,
+      ),
     );
   }
 }

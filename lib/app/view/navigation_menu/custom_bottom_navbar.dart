@@ -95,7 +95,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
             children: [
               const SizedBox(height: 10),
               CircleAvatar(
-                radius: index == _selectedIndex ?  (index == 2 ? 32 : 22) : (index == 2 ? 30 : 20),
+                radius: (index == 2 ? 32 : 22),
                 backgroundColor: ColorPalette.black,
                 child: CircleAvatar(
                   radius: index == 2 ? 30 : 20,
