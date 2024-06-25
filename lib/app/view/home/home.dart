@@ -132,27 +132,26 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: CustomBottomNavigationBar(
         defaultSelectedIndex: 0,
         onChange: (value) async {
-          const int milliSec = 150;
           switch (value) {
-            case 1: await Future.delayed(const Duration(milliseconds: milliSec));
+            case 1:
               return Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => const StatisticsScreen(),
                 ),
               );
-            case 2: await Future.delayed(const Duration(milliseconds: milliSec));
+            case 2:
               return Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => const BarcodeScannerWithController(), // BarcodeScannerSimple
                 ),
               );
-            case 3: await Future.delayed(const Duration(milliseconds: milliSec));
+            case 3:
               return Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => const HistoryScreen(),
                 ),
               );
-            case 4: await Future.delayed(const Duration(milliseconds: milliSec));
+            case 4:
               return Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => const ProfileScreen(),
