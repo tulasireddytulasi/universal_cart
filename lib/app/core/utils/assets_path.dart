@@ -10,6 +10,7 @@ class Assets {
   static const scannerIcon = "assets/icons/scanner.png";
 
   static const beepSound = "audio/beep_sound.mp3";
+  static const productsJSONObject = "assets/json/products_object.json";
 
 
 }

@@ -40,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> loadCart() async {
-    final String response = await rootBundle.loadString('assets/json/products_object.json');
+    final String response = await rootBundle.loadString(Assets.productsJSONObject);
     final data = await json.decode(response);
 
     final cartResponse = CartModel.fromJson(data);

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:universal_cart/app/core/utils/assets_path.dart';
+import 'package:universal_cart/app/core/utils/color_palette.dart';
 import 'package:universal_cart/app/view/qr_scanner/widgets/scanner_button_widgets.dart';
 import 'package:universal_cart/app/view/qr_scanner/widgets/scanner_error_widget.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -95,8 +96,17 @@ class _BarcodeScannerWithControllerState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('With controller')),
-      backgroundColor: Colors.black,
+      backgroundColor: ColorPalette.black,
+      appBar: AppBar(
+        elevation: 1,
+        backgroundColor: ColorPalette.white,
+        leading: const Icon(Icons.arrow_back_ios_rounded, color: ColorPalette.liteOrange, size: 28),
+        title: const Text(
+          "Barcode Scanner",
+          style: TextStyle(fontSize: 22, color: ColorPalette.black),
+        ),
+        centerTitle: false,
+      ),
       body: Stack(
         children: [
           MobileScanner(
