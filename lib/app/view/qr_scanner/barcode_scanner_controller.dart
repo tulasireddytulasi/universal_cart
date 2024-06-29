@@ -54,7 +54,7 @@ class _BarcodeScannerWithControllerState
       setState(() {
         _barcode = barcodes.barcodes.firstOrNull;
         beepSound(context: context);
-        Navigator.pop(context);
+        Navigator.pop(context, _barcode?.displayValue);
       });
     } else {
       print("_barcode 55: ${barcodes.toString()} ${_barcode?.displayValue ?? "No Data"}");

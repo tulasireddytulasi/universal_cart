@@ -140,11 +140,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               );
             case 2:
-              return Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const BarcodeScannerWithController(), // BarcodeScannerSimple
-                ),
-              );
+               scanBarcode(); break;
+              //   Navigator.of(context).push(
+              //   MaterialPageRoute(
+              //     builder: (context) => const BarcodeScannerWithController(), // BarcodeScannerSimple
+              //   ),
+              // );
             case 3:
               return Navigator.of(context).push(
                 MaterialPageRoute(
@@ -163,5 +164,18 @@ class _HomeScreenState extends State<HomeScreen> {
         imgUrls: iconAssetPaths,
       ),
     );
+  }
+
+  Future<void> scanBarcode() async {
+    final barcodeValue = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const BarcodeScannerWithController()),
+    );
+
+    if (barcodeValue != null) {
+      print("barcodeValue: ${barcodeValue.toString()}");
+      // Replace with your API call logic
+     // fetchProductDetails(barcodeValue);
+    }
   }
 }
