@@ -141,11 +141,6 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             case 2:
                scanBarcode(); break;
-              //   Navigator.of(context).push(
-              //   MaterialPageRoute(
-              //     builder: (context) => const BarcodeScannerWithController(), // BarcodeScannerSimple
-              //   ),
-              // );
             case 3:
               return Navigator.of(context).push(
                 MaterialPageRoute(
