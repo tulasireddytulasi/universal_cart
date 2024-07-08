@@ -1,12 +1,11 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universal_cart/app/core/utils/app_styles.dart';
 import 'package:universal_cart/app/core/utils/assets_path.dart';
 import 'package:universal_cart/app/core/utils/color_palette.dart';
 import 'package:universal_cart/app/core/utils/constants.dart';
-import 'package:universal_cart/app/model/cart_model.dart';
 import 'package:universal_cart/app/view/history/history.dart';
+import 'package:universal_cart/app/view/home/bloc/home_bloc.dart';
 import 'package:universal_cart/app/view/home/widget/cart_item_widget.dart';
 import 'package:universal_cart/app/view/navigation_menu/custom_bottom_navbar.dart';
 import 'package:universal_cart/app/view/profile/profile.dart';
@@ -21,9 +20,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<Product> products = [];
-  double _totalPrice = 0.0;
-  double _totalDiscount = 0.0;
   final List<String> bottomBarTitles = ["Home", "Statistics", "Scanner", "History", "Profile"];
   final List<String> iconAssetPaths = [
     Assets.homeIcon,
@@ -36,28 +32,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    loadCart();
-  }
-
-  Future<void> loadCart() async {
-    final String response = await rootBundle.loadString(Assets.productsJSONObject);
-    final data = await json.decode(response);
-
-    final cartResponse = CartModel.fromJson(data);
-    products = cartResponse.products ?? [];
-    products += products;
-    products.shuffle();
-    double totalPrice = 0.0;
-    double totalDiscount = 0.0;
-
-    for (var product in products) {
-      totalPrice += product.price ?? 0;
-      totalDiscount += product.discount ?? 0;
-    }
-
-    _totalPrice = totalPrice;
-    _totalDiscount = totalDiscount;
-    setState(() {});
   }
 
   @override
@@ -80,54 +54,80 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(width: 20),
         ],
       ),
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 16),
-            color: ColorPalette.white,
-            child: Row(
-              children: [
-                const Icon(Icons.shopping_cart, color: ColorPalette.liteOrange, size: 24),
-                const SizedBox(width: 10),
-                Text(
-                  "Your cart (${products.length} items)",
-                  textAlign: TextAlign.center,
-                  style: AppStyles.bodySmall.copyWith(
-                    color: ColorPalette.grey1,
-                    fontFamily: Constants.montserratMedium,
+      body: BlocBuilder<HomeBloc, HomeState>(
+        builder: (context, state) {
+          switch (state) {
+            case CartLoading():
+              return const CircularProgressIndicator();
+            case CartError():
+              return const Text('Something went wrong!');
+            case CartLoaded():
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 16),
+                    color: ColorPalette.white,
+                    child: Row(
+                      children: [
+                        const Icon(Icons.shopping_cart, color: ColorPalette.liteOrange, size: 24),
+                        const SizedBox(width: 10),
+                        Text(
+                          "Your cart (${state.products.length} items)",
+                          textAlign: TextAlign.center,
+                          style: AppStyles.bodySmall.copyWith(
+                            color: ColorPalette.grey1,
+                            fontFamily: Constants.montserratMedium,
+                          ),
+                        ),
+                        const Spacer(),
+                        Text(
+                          "${state.totalPrice} Rs",
+                          textAlign: TextAlign.center,
+                          style: AppStyles.bodyMedium.copyWith(
+                            color: ColorPalette.grey1,
+                            fontFamily: Constants.montserratMedium,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        const Icon(Icons.arrow_forward_ios_rounded, color: ColorPalette.liteOrange, size: 20),
+                      ],
+                    ),
                   ),
-                ),
-                const Spacer(),
-                Text(
-                  "$_totalPrice Rs",
-                  textAlign: TextAlign.center,
-                  style: AppStyles.bodyMedium.copyWith(
-                    color: ColorPalette.grey1,
-                    fontFamily: Constants.montserratMedium,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                const Icon(Icons.arrow_forward_ios_rounded, color: ColorPalette.liteOrange, size: 20),
-              ],
-            ),
-          ),
-          const SizedBox(height: 6),
-          Expanded(
-            child: ListView.separated(
-                separatorBuilder: (context, index) => const SizedBox(height: 2),
-                itemCount: products.length,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return CartItemWidget(
-                    name: products[index].name ?? "",
-                    brand: products[index].brand ?? "",
-                    price: double.parse(products[index].price.toString()),
-                    discount: double.parse(products[index].discount.toString()),
-                  );
-                }),
-          ),
-        ],
+                  const SizedBox(height: 6),
+                  state.products.isNotEmpty
+                      ? Expanded(
+                          child: ListView.separated(
+                              separatorBuilder: (context, index) => const SizedBox(height: 2),
+                              itemCount: state.products.length,
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) {
+                                return CartItemWidget(
+                                  name: state.products[index].name ?? "",
+                                  brand: state.products[index].brand ?? "",
+                                  price: double.parse(state.products[index].price.toString()),
+                                  discount: double.parse(state.products[index].discount.toString()),
+                                );
+                              }),
+                        )
+                      : Expanded(
+                          child: Center(
+                            child: Text(
+                              "No Items in Cart, Please add items.",
+                              textAlign: TextAlign.center,
+                              style: AppStyles.bodyMedium.copyWith(
+                                color: ColorPalette.grey1,
+                                fontFamily: Constants.montserratMedium,
+                              ),
+                            ),
+                          ),
+                        ),
+                ],
+              );
+            default:
+              return const CircularProgressIndicator();
+          }
+        },
       ),
       bottomNavigationBar: CustomBottomNavigationBar(
         defaultSelectedIndex: 0,
@@ -140,7 +140,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               );
             case 2:
-               scanBarcode(); break;
+              scanBarcode();
+              break;
             case 3:
               return Navigator.of(context).push(
                 MaterialPageRoute(
@@ -170,7 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (barcodeValue != null) {
       print("barcodeValue: ${barcodeValue.toString()}");
       // Replace with your API call logic
-     // fetchProductDetails(barcodeValue);
+      // fetchProductDetails(barcodeValue);
     }
   }
 }
