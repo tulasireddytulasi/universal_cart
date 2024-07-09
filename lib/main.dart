@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universal_cart/app/view/home/bloc/home_bloc.dart';
 import 'package:universal_cart/app/view/home/home.dart';
+import 'package:universal_cart/app/view/qr_scanner/bloc/barcode_scanner_bloc.dart';
 import 'package:universal_cart/cart_repository.dart';
 
 void main() {
@@ -22,6 +23,11 @@ class MyApp extends StatelessWidget {
           create: (_) => HomeBloc(
             shoppingRepository: shoppingRepository,
           )..add(CartStarted()),
+        ),
+        BlocProvider(
+          create: (_) => BarcodeScannerBloc(
+            shoppingRepository: ShoppingRepository(),
+          )..add(ScannerStarted()),
         ),
       ],
       child: MaterialApp(

@@ -74,7 +74,7 @@
     },
     {
       "barcode": "8901030711127",
-      "product_id": "PROD00004",
+      "product_id": "PROD00005",
       "name": "Tide Detergent Powder 1kg",
       "brand": "Tide",
       "description": "Gives dazzling whites and exceptional cleaning.",
@@ -92,7 +92,7 @@
     },
     {
       "barcode": "8901058130054",
-      "product_id": "PROD00005",
+      "product_id": "PROD00006",
       "name": "Maggi Noodles 70g",
       "brand": "Maggi",
       "description": "Instant noodles with a delicious masala flavor.",
@@ -110,7 +110,7 @@
     },
     {
       "barcode": "8901499000404",
-      "product_id": "PROD00006",
+      "product_id": "PROD00007",
       "name": "Kellogg's Corn Flakes 500g",
       "brand": "Kellogg's",
       "description": "Breakfast cereal made from golden corn.",
@@ -127,8 +127,8 @@
       "loyalty_points_earned": 17
     },
     {
-      "barcode": "8901499010021",
-      "product_id": "PROD00007",
+      "barcode": "8901499010077",
+      "product_id": "PROD00008",
       "name": "Lays Classic Salted Chips 100g",
       "brand": "Lays",
       "description": "Crispy and delicious potato chips.",

@@ -4,6 +4,7 @@ import 'package:universal_cart/app/core/utils/app_styles.dart';
 import 'package:universal_cart/app/core/utils/assets_path.dart';
 import 'package:universal_cart/app/core/utils/color_palette.dart';
 import 'package:universal_cart/app/core/utils/constants.dart';
+import 'package:universal_cart/app/model/cart_model.dart';
 import 'package:universal_cart/app/view/history/history.dart';
 import 'package:universal_cart/app/view/home/bloc/home_bloc.dart';
 import 'package:universal_cart/app/view/home/widget/cart_item_widget.dart';
@@ -58,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (context, state) {
           switch (state) {
             case CartLoading():
-              return const CircularProgressIndicator();
+              return const Center(child: CircularProgressIndicator());
             case CartError():
               return const Text('Something went wrong!');
             case CartLoaded():
@@ -163,15 +164,17 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> scanBarcode() async {
-    final barcodeValue = await Navigator.push(
+    final Product item = await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const BarcodeScannerWithController()),
     );
 
-    if (barcodeValue != null) {
-      print("barcodeValue: ${barcodeValue.toString()}");
-      // Replace with your API call logic
-      // fetchProductDetails(barcodeValue);
-    }
+    context.read<HomeBloc>().add(CartItemAdded(item: item));
+
+    // if (item != null) {
+    //   print("barcodeValue: ${barcodeValue.toString()}");
+    //   // Replace with your API call logic
+    //   // fetchProductDetails(barcodeValue);
+    // }
   }
 }

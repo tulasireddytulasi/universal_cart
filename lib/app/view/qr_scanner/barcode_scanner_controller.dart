@@ -1,11 +1,13 @@
 import 'dart:async';
+import 'dart:developer';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:universal_cart/app/core/utils/assets_path.dart';
 import 'package:universal_cart/app/core/utils/color_palette.dart';
+import 'package:universal_cart/app/view/qr_scanner/bloc/barcode_scanner_bloc.dart';
 import 'package:universal_cart/app/view/qr_scanner/widgets/scanner_button_widgets.dart';
 import 'package:universal_cart/app/view/qr_scanner/widgets/scanner_error_widget.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -15,12 +17,10 @@ class BarcodeScannerWithController extends StatefulWidget {
   const BarcodeScannerWithController({super.key});
 
   @override
-  State<BarcodeScannerWithController> createState() =>
-      _BarcodeScannerWithControllerState();
+  State<BarcodeScannerWithController> createState() => _BarcodeScannerWithControllerState();
 }
 
-class _BarcodeScannerWithControllerState
-    extends State<BarcodeScannerWithController> with WidgetsBindingObserver {
+class _BarcodeScannerWithControllerState extends State<BarcodeScannerWithController> with WidgetsBindingObserver {
   late AudioPlayer player = AudioPlayer();
   final MobileScannerController controller = MobileScannerController(
     autoStart: false,
@@ -50,12 +50,14 @@ class _BarcodeScannerWithControllerState
   }
 
   void _handleBarcode(BarcodeCapture barcodes) {
-    if (mounted && ( _barcode == null) ) {
-      setState(() {
-        _barcode = barcodes.barcodes.firstOrNull;
-        beepSound(context: context);
-        Navigator.pop(context, _barcode?.displayValue);
-      });
+    if (mounted && (_barcode == null)) {
+      // setState(() {
+      // _barcode = barcodes.barcodes.firstOrNull;
+      // beepSound(context: context);
+      // context.read<BarcodeScannerBloc>().add(GetItem(itemId: _barcode?.displayValue ?? ""));
+      // print("_barcode 444: ${barcodes.toString()} ${_barcode?.displayValue ?? "No Data"}");
+      // Navigator.pop(context, _barcode?.displayValue);
+      // });
     } else {
       print("_barcode 55: ${barcodes.toString()} ${_barcode?.displayValue ?? "No Data"}");
     }
@@ -107,34 +109,50 @@ class _BarcodeScannerWithControllerState
         ),
         centerTitle: false,
       ),
-      body: Stack(
-        children: [
-          MobileScanner(
-            controller: controller,
-            errorBuilder: (context, error, child) {
-              return ScannerErrorWidget(error: error);
-            },
-            fit: BoxFit.contain,
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
+      body: BlocListener<BarcodeScannerBloc, BarcodeScannerState>(
+        listener: (context, state) {
+          if (state is HomeNavigateState) {
+            Navigator.pop(context, state.product);
+          }
+        },
+        child: Stack(
+          children: [
+            MobileScanner(
+              controller: controller,
+              onDetect: (barcodes) {
+                if (mounted && (_barcode == null)) {
+                  _barcode = barcodes.barcodes.firstOrNull;
+                  beepSound(context: context);
+                  context.read<BarcodeScannerBloc>().add(GetItem(itemId: _barcode?.displayValue ?? ""));
+                } else {
+                  log("Barcode Data: ${_barcode?.displayValue ?? "No Data"}");
+                }
+              },
+              errorBuilder: (context, error, child) {
+                return ScannerErrorWidget(error: error);
+              },
+              fit: BoxFit.contain,
+            ),
+            Align(
               alignment: Alignment.bottomCenter,
-              height: 100,
-              color: Colors.black.withOpacity(0.4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ToggleFlashlightButton(controller: controller),
-                  StartStopMobileScannerButton(controller: controller),
-                  Expanded(child: Center(child: _buildBarcode(_barcode))),
-                  SwitchCameraButton(controller: controller),
-                  AnalyzeImageFromGalleryButton(controller: controller),
-                ],
+              child: Container(
+                alignment: Alignment.bottomCenter,
+                height: 100,
+                color: Colors.black.withOpacity(0.4),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ToggleFlashlightButton(controller: controller),
+                    StartStopMobileScannerButton(controller: controller),
+                    Expanded(child: Center(child: _buildBarcode(_barcode))),
+                    SwitchCameraButton(controller: controller),
+                    AnalyzeImageFromGalleryButton(controller: controller),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -154,9 +172,7 @@ class _BarcodeScannerWithControllerState
 
     // Show snackbar
     if (!context.mounted) return;
-    final snackBarMessage = can
-        ? 'HapticsType : Soft'
-        : 'This device is not capable of haptic feedback.';
+    final snackBarMessage = can ? 'HapticsType : Soft' : 'This device is not capable of haptic feedback.';
     can ? HapticFeedback.heavyImpact() : null;
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(

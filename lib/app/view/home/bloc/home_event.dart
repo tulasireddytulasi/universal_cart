@@ -10,3 +10,21 @@ final class CartStarted extends HomeEvent {
   List<Object> get props => [];
 }
 
+final class CartItemAdded extends HomeEvent {
+  const CartItemAdded({required this.item});
+
+  final Product item;
+
+  @override
+  List<Object> get props => [item];
+}
+
+final class CartItemRemoved extends HomeEvent {
+  const CartItemRemoved(this.item);
+
+  final Product item;
+
+  @override
+  List<Object> get props => [item];
+}
+
