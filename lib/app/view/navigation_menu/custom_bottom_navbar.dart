@@ -49,13 +49,15 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
 
     return Container(
       height: 92,
-      margin: const EdgeInsets.only(bottom: 4, left: 4, right: 4),
+      decoration: const BoxDecoration(
+        color: ColorPalette.antiFlashWhite,
+        border: Border(top: BorderSide(color: ColorPalette.silver2, width: 1)),
+      ),
       child: buildBlur(
         borderRadius: BorderRadius.circular(10),
         child: Container(
-          padding: const EdgeInsets.all(2),
+          padding: const EdgeInsets.only(bottom: 2, left: 2, right: 2),
           width: screenWidth >= 600 ? 500 : null,
-          color: ColorPalette.antiFlashWhite,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: navBarItemList,
