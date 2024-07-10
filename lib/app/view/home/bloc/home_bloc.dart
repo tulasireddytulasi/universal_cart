@@ -8,12 +8,14 @@ import 'package:universal_cart/app/model/cart_model.dart';
 import 'package:universal_cart/cart_repository.dart';
 
 part 'home_event.dart';
+
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc({required this.shoppingRepository}) : super(HomeInitial()) {
     on<CartStarted>(_onStarted);
     on<CartItemAdded>(_onItemAdded);
+    on<CartItemRemoved>(_onItemRemoved);
   }
 
   final ShoppingRepository shoppingRepository;
@@ -41,14 +43,39 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   FutureOr<void> _onItemAdded(CartItemAdded event, Emitter<HomeState> emit) async {
-      try {
-        shoppingRepository.addItemToCart(event.item);
+    try {
+      shoppingRepository.addItemToCart(event.item);
+      List<Product> products = shoppingRepository.loadCartAllItems();
+      double totalPrice = 0;
+      double totalDiscount = 0;
+
+      for (var product in products) {
+        totalPrice += product.price ?? 0;
+        totalDiscount += product.discount ?? 0;
+      }
+
+      emit(
+        CartLoaded(
+          products: [...products],
+          totalPrice: totalPrice,
+          totalDiscount: totalDiscount,
+        ),
+      );
+    } catch (e, s) {
+      log("_onItemAdded Error: $e");
+      log("_onItemAdded Stack Error: $s");
+      emit(CartError());
+    }
+  }
+
+  FutureOr<void> _onItemRemoved(CartItemRemoved event, Emitter<HomeState> emit) async {
+    try {
+      final state = this.state;
+      if (state is CartLoaded) {
+        shoppingRepository.removeItemFromCart(event.item);
         List<Product> products = shoppingRepository.loadCartAllItems();
-
-        print("Len: ${products.length}");
-
-        double totalPrice = 0.0;
-        double totalDiscount = 0.0;
+        double totalPrice = 0;
+        double totalDiscount = 0;
 
         for (var product in products) {
           totalPrice += product.price ?? 0;
@@ -57,16 +84,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
         emit(
           CartLoaded(
-            products: [...products],
+            products: [...products]..remove(event.item),
             totalPrice: totalPrice,
             totalDiscount: totalDiscount,
           ),
         );
-      } catch (e, s) {
-        log("_onItemAdded Error: $e");
-        log("_onItemAdded Stack Error: $s");
-        emit(CartError());
       }
+    } catch (e, s) {
+      log("_onItemRemoved Error: $e");
+      log("_onItemRemoved Stack Error: $s");
+      emit(CartError());
+    }
   }
-
 }

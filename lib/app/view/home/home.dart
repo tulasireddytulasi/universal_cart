@@ -103,11 +103,34 @@ class _HomeScreenState extends State<HomeScreen> {
                               itemCount: state.products.length,
                               shrinkWrap: true,
                               itemBuilder: (context, index) {
-                                return CartItemWidget(
-                                  name: state.products[index].name ?? "",
-                                  brand: state.products[index].brand ?? "",
-                                  price: double.parse(state.products[index].price.toString()),
-                                  discount: double.parse(state.products[index].discount.toString()),
+                                return Dismissible(
+                                  key: ValueKey<String>(state.products[index].barcode ?? ""),
+                                  direction: DismissDirection.endToStart,
+                                  onDismissed: (direction) {
+                                    context.read<HomeBloc>().add(CartItemRemoved(state.products[index]));
+                                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text("Item Removed")),
+                                    );
+                                  },
+                                  background: Container(
+                                    color: ColorPalette.red,
+                                    alignment: Alignment.centerRight,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8),
+                                      child: Text(
+                                        "Delete",
+                                        style: AppStyles.titleSmall,
+                                        textAlign: TextAlign.right,
+                                      ),
+                                    ),
+                                  ),
+                                  child: CartItemWidget(
+                                    name: state.products[index].name ?? "",
+                                    brand: state.products[index].brand ?? "",
+                                    price: double.parse(state.products[index].price.toString()),
+                                    discount: double.parse(state.products[index].discount.toString()),
+                                  ),
                                 );
                               }),
                         )
