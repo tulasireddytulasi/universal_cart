@@ -12,5 +12,7 @@ class Assets {
   static const beepSound = "audio/beep_sound.mp3";
   static const productsJSONObject = "assets/json/products_object.json";
 
+  static const cartEmptyAnimation = "assets/lottie/empty_cart_animation.json";
+  static const cartDoneAnimation = "assets/lottie/cart_done_animation.json";
 
 }

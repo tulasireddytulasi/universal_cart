@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 import 'package:universal_cart/app/core/utils/app_styles.dart';
 import 'package:universal_cart/app/core/utils/assets_path.dart';
 import 'package:universal_cart/app/core/utils/color_palette.dart';
@@ -107,11 +108,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                   key: ValueKey<String>(state.products[index].barcode ?? ""),
                                   direction: DismissDirection.endToStart,
                                   onDismissed: (direction) {
-                                    context.read<HomeBloc>().add(CartItemRemoved(state.products[index]));
                                     ScaffoldMessenger.of(context).hideCurrentSnackBar();
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(content: Text("Item Removed")),
                                     );
+                                    context.read<HomeBloc>().add(CartItemRemoved(state.products[index]));
                                   },
                                   background: Container(
                                     color: ColorPalette.red,
@@ -136,13 +137,66 @@ class _HomeScreenState extends State<HomeScreen> {
                         )
                       : Expanded(
                           child: Center(
-                            child: Text(
-                              "No Items in Cart, Please add items.",
-                              textAlign: TextAlign.center,
-                              style: AppStyles.bodyMedium.copyWith(
-                                color: ColorPalette.grey1,
-                                fontFamily: Constants.montserratMedium,
-                              ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  width: 300,
+                                  height: 300,
+                                  child: Lottie.asset(
+                                    Assets.cartEmptyAnimation,
+                                    animate: true,
+                                    repeat: true,
+                                  ),
+                                ),
+                                const SizedBox(height: 30),
+                                RichText(
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
+                                  maxLines: 2,
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: "Oops!, \n",
+                                        style: AppStyles.bodyMedium.copyWith(
+                                          fontSize: 18,
+                                          color: ColorPalette.grey,
+                                          fontFamily: Constants.montserratBold,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: "No Items in the Cart",
+                                        style: AppStyles.bodyMedium.copyWith(
+                                          fontSize: 18,
+                                          color: ColorPalette.grey,
+                                          fontFamily: Constants.montserratMedium,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                // Text(
+                                //   "oops!",
+                                //   textAlign: TextAlign.center,
+                                //   style: AppStyles.bodyMedium.copyWith(
+                                //     fontSize: 26,
+                                //     color: ColorPalette.grey1,
+                                //     fontWeight: FontWeight.bold,
+                                //     fontFamily: Constants.montserratMedium,
+                                //   ),
+                                // ),
+                                // Text(
+                                //   "No Items in Cart",
+                                //   textAlign: TextAlign.center,
+                                //   style: AppStyles.bodyMedium.copyWith(
+                                //     fontSize: 26,
+                                //     color: ColorPalette.grey1,
+                                //     fontWeight: FontWeight.bold,
+                                //     fontFamily: Constants.montserratMedium,
+                                //   ),
+                                // ),
+                              ],
                             ),
                           ),
                         ),
