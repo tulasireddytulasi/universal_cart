@@ -17,7 +17,7 @@ final class ItemLoading extends BarcodeScannerState {
 
 final class HomeNavigateState extends BarcodeScannerState {
   const HomeNavigateState({required this.product});
-  final Product product;
+  final CartItemModel product;
 
   @override
   List<Object> get props => [product];

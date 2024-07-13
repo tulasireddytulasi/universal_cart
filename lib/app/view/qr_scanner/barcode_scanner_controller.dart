@@ -32,7 +32,6 @@ class _BarcodeScannerWithControllerState extends State<BarcodeScannerWithControl
   StreamSubscription<Object?>? _subscription;
 
   Widget _buildBarcode(Barcode? value) {
-    print("_barcode: ${_barcode?.displayValue ?? "No Data"}");
 
     if (value == null) {
       return const Text(
@@ -49,25 +48,13 @@ class _BarcodeScannerWithControllerState extends State<BarcodeScannerWithControl
     );
   }
 
-  void _handleBarcode(BarcodeCapture barcodes) {
-    if (mounted && (_barcode == null)) {
-      // setState(() {
-      // _barcode = barcodes.barcodes.firstOrNull;
-      // beepSound(context: context);
-      // context.read<BarcodeScannerBloc>().add(GetItem(itemId: _barcode?.displayValue ?? ""));
-      // print("_barcode 444: ${barcodes.toString()} ${_barcode?.displayValue ?? "No Data"}");
-      // Navigator.pop(context, _barcode?.displayValue);
-      // });
-    } else {
-      print("_barcode 55: ${barcodes.toString()} ${_barcode?.displayValue ?? "No Data"}");
-    }
-  }
+  void _handleBarcode(BarcodeCapture barcodes) {}
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    // Create the audio player.
+    /// Create the audio player.
     player = AudioPlayer();
     _subscription = controller.barcodes.listen(_handleBarcode);
     unawaited(controller.start());
@@ -172,13 +159,12 @@ class _BarcodeScannerWithControllerState extends State<BarcodeScannerWithControl
 
     // Show snackbar
     if (!context.mounted) return;
-    final snackBarMessage = can ? 'HapticsType : Soft' : 'This device is not capable of haptic feedback.';
     can ? HapticFeedback.heavyImpact() : null;
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(snackBarMessage, textAlign: TextAlign.center),
-        duration: const Duration(seconds: 1),
+      const SnackBar(
+        content: Text("Item added", textAlign: TextAlign.center),
+        duration: Duration(seconds: 1),
       ),
     );
 

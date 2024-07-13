@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
@@ -5,7 +7,7 @@ import 'package:universal_cart/app/core/utils/app_styles.dart';
 import 'package:universal_cart/app/core/utils/assets_path.dart';
 import 'package:universal_cart/app/core/utils/color_palette.dart';
 import 'package:universal_cart/app/core/utils/constants.dart';
-import 'package:universal_cart/app/model/cart_model.dart';
+import 'package:universal_cart/app/model/cart_item_model.dart';
 import 'package:universal_cart/app/view/history/history.dart';
 import 'package:universal_cart/app/view/home/bloc/home_bloc.dart';
 import 'package:universal_cart/app/view/home/widget/cart_item_widget.dart';
@@ -75,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         const Icon(Icons.shopping_cart, color: ColorPalette.liteOrange, size: 24),
                         const SizedBox(width: 10),
                         Text(
-                          "Your cart (${state.products.length} items)",
+                          "Your cart (${state.quantity} items)",
                           textAlign: TextAlign.center,
                           style: AppStyles.bodySmall.copyWith(
                             color: ColorPalette.grey1,
@@ -105,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               shrinkWrap: true,
                               itemBuilder: (context, index) {
                                 return Dismissible(
-                                  key: ValueKey<String>(state.products[index].barcode ?? ""),
+                                  key: ValueKey<String>(state.products[index].itemData.barcode ?? ""),
                                   direction: DismissDirection.endToStart,
                                   onDismissed: (direction) {
                                     ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -128,9 +130,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   child: CartItemWidget(
                                     name: state.products[index].name ?? "",
-                                    brand: state.products[index].brand ?? "",
-                                    price: double.parse(state.products[index].price.toString()),
-                                    discount: double.parse(state.products[index].discount.toString()),
+                                    brand: state.products[index].itemData.brand ?? "",
+                                    price: double.parse(state.products[index].finalPrice.toString()),
+                                    discount: double.parse(state.products[index].finalDiscount.toString()),
+                                    qty: state.products[index].noOfItems,
                                   ),
                                 );
                               }),
@@ -176,26 +179,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ],
                                   ),
                                 ),
-                                // Text(
-                                //   "oops!",
-                                //   textAlign: TextAlign.center,
-                                //   style: AppStyles.bodyMedium.copyWith(
-                                //     fontSize: 26,
-                                //     color: ColorPalette.grey1,
-                                //     fontWeight: FontWeight.bold,
-                                //     fontFamily: Constants.montserratMedium,
-                                //   ),
-                                // ),
-                                // Text(
-                                //   "No Items in Cart",
-                                //   textAlign: TextAlign.center,
-                                //   style: AppStyles.bodyMedium.copyWith(
-                                //     fontSize: 26,
-                                //     color: ColorPalette.grey1,
-                                //     fontWeight: FontWeight.bold,
-                                //     fontFamily: Constants.montserratMedium,
-                                //   ),
-                                // ),
                               ],
                             ),
                           ),
@@ -241,17 +224,16 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> scanBarcode() async {
-    final Product item = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const BarcodeScannerWithController()),
-    );
+    try{
+      final CartItemModel item = await Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const BarcodeScannerWithController()),
+      );
 
-    context.read<HomeBloc>().add(CartItemAdded(item: item));
-
-    // if (item != null) {
-    //   print("barcodeValue: ${barcodeValue.toString()}");
-    //   // Replace with your API call logic
-    //   // fetchProductDetails(barcodeValue);
-    // }
+      context.read<HomeBloc>().add(CartItemAdded(item: item));
+    }catch(e, r){
+      log("Home error: $e");
+      log("Home error r: $r");
+    }
   }
 }

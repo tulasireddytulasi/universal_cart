@@ -13,7 +13,7 @@ final class CartStarted extends HomeEvent {
 final class CartItemAdded extends HomeEvent {
   const CartItemAdded({required this.item});
 
-  final Product item;
+  final CartItemModel item;
 
   @override
   List<Object> get props => [item];
@@ -22,7 +22,7 @@ final class CartItemAdded extends HomeEvent {
 final class CartItemRemoved extends HomeEvent {
   const CartItemRemoved(this.item);
 
-  final Product item;
+  final CartItemModel item;
 
   @override
   List<Object> get props => [item];

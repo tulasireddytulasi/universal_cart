@@ -15,11 +15,17 @@ final class CartLoading extends HomeState {
 }
 
 final class CartLoaded extends HomeState {
-  const CartLoaded({required this.products, required this.totalPrice, required this.totalDiscount});
+  const CartLoaded({
+    required this.products,
+    required this.totalPrice,
+    required this.totalDiscount,
+    required this.quantity,
+  });
 
-  final List<Product> products;
+  final List<CartItemModel> products;
   final double totalPrice;
   final double totalDiscount;
+  final int quantity;
 
   @override
   List<Object> get props => [products, totalPrice, totalDiscount];

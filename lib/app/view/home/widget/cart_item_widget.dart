@@ -4,12 +4,20 @@ import 'package:universal_cart/app/core/utils/color_palette.dart';
 import 'package:universal_cart/app/core/utils/constants.dart';
 
 class CartItemWidget extends StatelessWidget {
-  const CartItemWidget({super.key, required this.name, required this.brand, required this.price, required this.discount});
+  const CartItemWidget({
+    super.key,
+    required this.name,
+    required this.brand,
+    required this.price,
+    required this.discount,
+    required this.qty,
+  });
 
   final String name;
   final String brand;
   final double price;
   final double discount;
+  final int qty;
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +73,16 @@ class CartItemWidget extends StatelessWidget {
                     decoration: TextDecoration.lineThrough,
                     decorationColor: ColorPalette.cottonSeed,
                     color: ColorPalette.cottonSeed,
+                    fontFamily: Constants.montserratMedium,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  "Qty: $qty",
+                  textAlign: TextAlign.end,
+                  style: AppStyles.bodyMedium.copyWith(
+
+                    color: ColorPalette.black,
                     fontFamily: Constants.montserratMedium,
                   ),
                 ),

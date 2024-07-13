@@ -26,8 +26,8 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => BarcodeScannerBloc(
-            shoppingRepository: ShoppingRepository(),
-          )..add(ScannerStarted()),
+            shoppingRepository: shoppingRepository,
+          ),
         ),
       ],
       child: MaterialApp(

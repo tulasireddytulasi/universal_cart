@@ -1,35 +1,43 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'package:universal_cart/app/core/utils/assets_path.dart';
+import 'package:universal_cart/app/model/cart_item_model.dart';
 import 'package:universal_cart/app/model/cart_model.dart';
 
 const _delay = Duration(milliseconds: 800);
 
 class ShoppingRepository {
 
-  final List<Product> _products = <Product>[];
+  final List<CartItemModel> _allProductsList = <CartItemModel>[];
 
-  Future<void> loadAllItems() async {
-    final String response = await rootBundle.loadString(Assets.productsJSONObject);
-    final data = await json.decode(response);
-    final CartModel cartResponse = CartModel.fromJson(data);
-    _products.addAll(cartResponse.products ?? []);
+  final List<CartItemModel> _cartItems = <CartItemModel>[];
+
+  Future<CartItemModel> fetchItem({required String itemId}) async {
+    if(_allProductsList.isEmpty){
+      final String response = await rootBundle.loadString(Assets.productsJSONObject);
+      final data = await json.decode(response);
+      final CartModel cartResponse = CartModel.fromJson(data);
+      for(Product product in cartResponse.products ?? []){
+        _allProductsList.add(CartItemModel(
+          name: product.name ?? "",
+          finalPrice: product.price?.toDouble() ?? 0,
+          finalDiscount: product.discount?.toDouble() ?? 0,
+          noOfItems: 1,
+          itemData: product,
+        ));
+      }
+    }
+    CartItemModel cartItem = _allProductsList.firstWhere((product) => product.itemData.barcode == itemId);
+    return cartItem;
   }
 
-  Future<CartModel> loadCartItems() async {
-    final String response = await rootBundle.loadString(Assets.productsJSONObject);
-    final data = await json.decode(response);
-    final CartModel cartResponse = CartModel.fromJson(data);
-    Future.delayed(_delay);
-    return cartResponse;
-  }
+  List<CartItemModel> loadCartAllItems() => _cartItems;
 
-  List<Product> loadCartAllItems() => _products;
+  void removeAllItems() => _cartItems.clear();
 
-  void removeAllItems() => _products.clear();
+  void addItemToCart(CartItemModel item) => _cartItems.insert(0, item);
 
-  void addItemToCart(Product item) => _products.add(item);
-
-  void removeItemFromCart(Product item) => _products.remove(item);
+  void removeItemFromCart(CartItemModel item) => _cartItems.remove(item);
 }
