@@ -14,7 +14,7 @@ class ShoppingRepository {
 
   final List<CartItemModel> _cartItems = <CartItemModel>[];
 
-  Future<CartItemModel> fetchItem({required String itemId}) async {
+  Future<void> fetchAllItems() async {
     if(_allProductsList.isEmpty){
       final String response = await rootBundle.loadString(Assets.productsJSONObject);
       final data = await json.decode(response);
@@ -29,8 +29,18 @@ class ShoppingRepository {
         ));
       }
     }
+  }
+
+  Future<CartItemModel> fetchItem({required String itemId}) async {
+    await fetchAllItems();
     CartItemModel cartItem = _allProductsList.firstWhere((product) => product.itemData.barcode == itemId);
     return cartItem;
+  }
+
+  Future<bool> isItemFound({required String itemId}) async {
+    await fetchAllItems();
+    bool itemFound = _allProductsList.any((model) => model.itemData.barcode == itemId);
+    return itemFound;
   }
 
   List<CartItemModel> loadCartAllItems() => _cartItems;

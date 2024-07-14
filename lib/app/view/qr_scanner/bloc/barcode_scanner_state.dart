@@ -24,6 +24,9 @@ final class HomeNavigateState extends BarcodeScannerState {
 }
 
 final class ItemError extends BarcodeScannerState {
+  const ItemError({required this.errorModel});
+  final ErrorModel errorModel;
+
   @override
-  List<Object> get props => [];
+  List<Object> get props => [errorModel];
 }

@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 import 'package:universal_cart/app/model/cart_item_model.dart';
+import 'package:universal_cart/app/model/error_model.dart';
 import 'package:universal_cart/cart_repository.dart';
 
 part 'barcode_scanner_event.dart';
@@ -20,7 +21,16 @@ class BarcodeScannerBloc extends Bloc<BarcodeScannerEvent, BarcodeScannerState> 
 
   FutureOr<void> _onGetItem(GetItem event, Emitter<BarcodeScannerState> emit) async {
     try {
+      final bool itemFound = await shoppingRepository.isItemFound(itemId: event.itemId);
+
+      if (!itemFound) {
+        ErrorModel errorModel = ErrorModel(errorMessage: "Item not found", dateTime: DateTime.now().toIso8601String());
+        emit(ItemError(errorModel: errorModel));
+        return;
+      }
+
       CartItemModel cartItem = await shoppingRepository.fetchItem(itemId: event.itemId);
+
       List<CartItemModel> productsList = shoppingRepository.loadCartAllItems();
 
       if (productsList.isEmpty) {
@@ -44,7 +54,8 @@ class BarcodeScannerBloc extends Bloc<BarcodeScannerEvent, BarcodeScannerState> 
         emit(HomeNavigateState(product: cartItem));
       }
     } catch (e, t) {
-      emit(ItemError());
+      ErrorModel errorModel = ErrorModel(errorMessage: e.toString(), dateTime: DateTime.now().toIso8601String());
+      emit(ItemError(errorModel: errorModel));
     }
   }
 }

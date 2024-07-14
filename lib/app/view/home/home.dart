@@ -226,12 +226,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> scanBarcode() async {
     try{
-      final CartItemModel item = await Navigator.push(
+      final CartItemModel? item = await Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const BarcodeScannerWithController()),
       );
 
-      context.read<HomeBloc>().add(CartItemAdded(item: item));
+      item != null ? context.read<HomeBloc>().add(CartItemAdded(item: item)) : null;
     }catch(e, r){
       log("Home error: $e");
       log("Home error r: $r");

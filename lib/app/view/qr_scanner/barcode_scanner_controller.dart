@@ -99,7 +99,23 @@ class _BarcodeScannerWithControllerState extends State<BarcodeScannerWithControl
       body: BlocListener<BarcodeScannerBloc, BarcodeScannerState>(
         listener: (context, state) {
           if (state is HomeNavigateState) {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("Item added", textAlign: TextAlign.center),
+                duration: Duration(seconds: 1),
+              ),
+            );
             Navigator.pop(context, state.product);
+          } else if (state is ItemError) {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            ScaffoldMessenger.of(context).showSnackBar(
+               SnackBar(
+                content: Text(state.errorModel.errorMessage, textAlign: TextAlign.center),
+                duration: const Duration(milliseconds: 500),
+              ),
+            );
+            Navigator.pop(context);
           }
         },
         child: Stack(
@@ -160,13 +176,6 @@ class _BarcodeScannerWithControllerState extends State<BarcodeScannerWithControl
     // Show snackbar
     if (!context.mounted) return;
     can ? HapticFeedback.heavyImpact() : null;
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Item added", textAlign: TextAlign.center),
-        duration: Duration(seconds: 1),
-      ),
-    );
 
     // Vibrate only if device is capable of haptic feedback
     if (!can) return;
