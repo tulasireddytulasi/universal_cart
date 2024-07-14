@@ -105,6 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               separatorBuilder: (context, index) => const SizedBox(height: 2),
                               itemCount: state.products.length,
                               shrinkWrap: true,
+                              physics: const BouncingScrollPhysics(),
                               itemBuilder: (context, index) {
                                 return Dismissible(
                                   key: ValueKey<String>(state.products[index].itemData.barcode ?? ""),
