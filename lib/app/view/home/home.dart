@@ -231,6 +231,7 @@ class _HomeScreenState extends State<HomeScreen> {
         MaterialPageRoute(builder: (context) => const BarcodeScannerWithController()),
       );
 
+      if(!mounted) return;
       item != null ? context.read<HomeBloc>().add(CartItemAdded(item: item)) : null;
     }catch(e, r){
       log("Home error: $e");
